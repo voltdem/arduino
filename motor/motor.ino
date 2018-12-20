@@ -7,10 +7,10 @@ long servoPosition = 0;
 Servo servo;
 int angle;
 int power;
-int servoD = 5; //полярность выхода на серву, порт должен быть с возможностью аналога
-int servoV = 6; //напряжение на серву, порт должен быть с возможностью аналога
-int motorD = 10; //полярность выхода на двиган, порт должен быть с возможностью аналога
-int motorV = 11; //напряжение на двиган, порт должен быть с возможностью аналога
+int servoD = 5; //РїРѕР»СЏСЂРЅРѕСЃС‚СЊ РІС‹С…РѕРґР° РЅР° СЃРµСЂРІСѓ, РїРѕСЂС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ Р°РЅР°Р»РѕРіР°
+int servoV = 6; //РЅР°РїСЂСЏР¶РµРЅРёРµ РЅР° СЃРµСЂРІСѓ, РїРѕСЂС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ Р°РЅР°Р»РѕРіР°
+int motorD = 10; //РїРѕР»СЏСЂРЅРѕСЃС‚СЊ РІС‹С…РѕРґР° РЅР° РґРІРёРіР°РЅ, РїРѕСЂС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ Р°РЅР°Р»РѕРіР°
+int motorV = 11; //РЅР°РїСЂСЏР¶РµРЅРёРµ РЅР° РґРІРёРіР°РЅ, РїРѕСЂС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ Р°РЅР°Р»РѕРіР°
 
 
 int powerMax = 255;
@@ -19,7 +19,7 @@ int oldY = 0;
 
 SoftwareSerial softSerial = SoftwareSerial(2, 3);
 
-String portData = "";     // Переменная приема команды
+String portData = "";     // РџРµСЂРµРјРµРЅРЅР°СЏ РїСЂРёРµРјР° РєРѕРјР°РЅРґС‹
 boolean endOfString = false;
 
 void setup() {
@@ -31,9 +31,9 @@ void setup() {
   pinMode(servoD, OUTPUT);
   pinMode(motorV, OUTPUT);
   digitalWrite(servoD, HIGH);
-  analogWrite(servoV, 0);   //5V from 7V, если servoD=HIGH, то 0-максимальное, а 255 - ноль, но НУЖНЫ живые акумы!!!!
+  analogWrite(servoV, 0);   //5V from 7V, РµСЃР»Рё servoD=HIGH, С‚Рѕ 0-РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ, Р° 255 - РЅРѕР»СЊ, РЅРѕ РќРЈР–РќР« Р¶РёРІС‹Рµ Р°РєСѓРјС‹!!!!
   digitalWrite(motorD, HIGH);
-  analogWrite(motorV, 255); // 125 - это 3.5 из 7.3 для LOW, 130 для HIGH
+  analogWrite(motorV, 255); // 125 - СЌС‚Рѕ 3.5 РёР· 7.3 РґР»СЏ LOW, 130 РґР»СЏ HIGH
 
   servo.attach(servoPin);
   servo.write(90);
@@ -41,14 +41,14 @@ void setup() {
 
 void loop() {
   while (softSerial.available() > 0 && !endOfString) {
-    char c = softSerial.read();    // Очередной символ в строке
-    if (c != '\n') portData += c;     // Если это не символ конца строки, то добавляем его в строку
+    char c = softSerial.read();    // РћС‡РµСЂРµРґРЅРѕР№ СЃРёРјРІРѕР» РІ СЃС‚СЂРѕРєРµ
+    if (c != '\n') portData += c;     // Р•СЃР»Рё СЌС‚Рѕ РЅРµ СЃРёРјРІРѕР» РєРѕРЅС†Р° СЃС‚СЂРѕРєРё, С‚Рѕ РґРѕР±Р°РІР»СЏРµРј РµРіРѕ РІ СЃС‚СЂРѕРєСѓ
     else endOfString = true;
   }
 
-  if (endOfString) {    // Если получен символ конца строки то разбор строки на ключ - значение и сравнение с готовыми
+  if (endOfString) {    // Р•СЃР»Рё РїРѕР»СѓС‡РµРЅ СЃРёРјРІРѕР» РєРѕРЅС†Р° СЃС‚СЂРѕРєРё С‚Рѕ СЂР°Р·Р±РѕСЂ СЃС‚СЂРѕРєРё РЅР° РєР»СЋС‡ - Р·РЅР°С‡РµРЅРёРµ Рё СЃСЂР°РІРЅРµРЅРёРµ СЃ РіРѕС‚РѕРІС‹РјРё
     Serial.println("portData: " + portData);
-    String key = "", value = "";   // ключ, значение
+    String key = "", value = "";   // РєР»СЋС‡, Р·РЅР°С‡РµРЅРёРµ
     int i = 0;
     while (portData.length()>i) {
       if (portData[i]==' ') break;
@@ -67,7 +67,7 @@ void loop() {
     portData = "";
     endOfString = false;
 
-    if (key.equals("dir")) {  // Делать при получении значения с джойстика с идентификатором = 1
+    if (key.equals("dir")) {  // Р”РµР»Р°С‚СЊ РїСЂРё РїРѕР»СѓС‡РµРЅРёРё Р·РЅР°С‡РµРЅРёСЏ СЃ РґР¶РѕР№СЃС‚РёРєР° СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј = 1
       boolean boolJoy = false; //
       int i = 0;
       String valueX = "", valueY = "";
@@ -77,8 +77,8 @@ void loop() {
         else if (value[i] != ' ' && boolJoy) valueY += value[i];
         i++;
       }
-      int iValueX = valueX.toInt(); // Координата X
-      int iValueY = valueY.toInt(); // Координата Y
+      int iValueX = valueX.toInt(); // РљРѕРѕСЂРґРёРЅР°С‚Р° X
+      int iValueY = valueY.toInt(); // РљРѕРѕСЂРґРёРЅР°С‚Р° Y
 //      Serial.println("valueX:" + valueX);
 //      Serial.println("iValueX:" + String(iValueX));
       angle = map(-iValueX, -10, 10, 60, 120);
@@ -87,10 +87,10 @@ void loop() {
       servo.write(angle);
       SetPowerFromY(iValueY);
     }
-    if(key.equals("L1on")){ //Делать при включении переключателя с идентификатором = 2
+    if(key.equals("L1on")){ //Р”РµР»Р°С‚СЊ РїСЂРё РІРєР»СЋС‡РµРЅРёРё РїРµСЂРµРєР»СЋС‡Р°С‚РµР»СЏ СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј = 2
 
     }
-    if(key.equals("L1off")){    //Делать при выключении переключателя с идентификатором = 2
+    if(key.equals("L1off")){    //Р”РµР»Р°С‚СЊ РїСЂРё РІС‹РєР»СЋС‡РµРЅРёРё РїРµСЂРµРєР»СЋС‡Р°С‚РµР»СЏ СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј = 2
 
     }
   }
@@ -99,17 +99,17 @@ void loop() {
 
 void SetPowerFromY(int valY) {
   int power = 0;
-  int startPower = 0; // Стартовая мощь
+  int startPower = 0; // РЎС‚Р°СЂС‚РѕРІР°СЏ РјРѕС‰СЊ
   if (valY >= -1 && valY <= 1) {
     valY = 0;
   }
-  // Вперед
+  // Р’РїРµСЂРµРґ
   if (valY >= 0) {
     digitalWrite(motorD, HIGH);
     startPower = powerMax - powerForward;
     power = map(abs(valY), 0, 10, powerMax, powerMax - powerForward);
   }
-  // Назад
+  // РќР°Р·Р°Рґ
   else {
     digitalWrite(motorD, LOW);
     startPower = powerForward;
